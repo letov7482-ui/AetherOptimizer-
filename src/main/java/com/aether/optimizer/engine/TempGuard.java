@@ -1,7 +1,9 @@
 package com.aether.optimizer.engine;
 
 import com.aether.optimizer.AetherOptimizerMod;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class TempGuard {
