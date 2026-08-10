@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "aetheroptimizer",
+  "version": "1.0.0",
+  "name": "AetherOptimizer",
+  "description": "Smart optimizer: auto render switch, heat guard, fast place, smart RAM, network boost. Pulse Visuals UI.",
+  "authors": ["Aether"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "main": ["com.aether.optimizer.AetherOptimizerMod"] },
+  "mixins": ["aetheroptimizer.mixins.json"],
+  "depends": { "fabricloader": ">=0.16.5", "minecraft": "~1.21.4" }
+}
