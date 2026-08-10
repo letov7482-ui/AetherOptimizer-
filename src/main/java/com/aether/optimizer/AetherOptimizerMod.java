@@ -33,6 +33,7 @@ public class AetherOptimizerMod implements ModInitializer {
             TempGuard.startMonitoring();
             SmartRAM.startAutoClean();
             FastPlace.tick();
+            if (FpsBooster.isEnabled()) FpsBooster.applyAll();
         });
 
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
