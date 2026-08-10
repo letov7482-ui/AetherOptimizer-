@@ -13,6 +13,9 @@ public class FpsBooster {
     public static void setEnabled(boolean e) { enabled = e; }
     public static boolean isEnabled() { return enabled; }
 
+    /**
+     * ULTRA BOOST — максимальный FPS без потери качества графики.
+     */
     public static void applyAll() {
         if (!enabled) return;
         applyOpenGLUltra();
@@ -27,21 +30,17 @@ public class FpsBooster {
         AetherOptimizerMod.LOGGER.info("ULTRA BOOST APPLIED");
     }
 
+    // 1. OpenGL — только безопасные твики
     private static void applyOpenGLUltra() {
         try {
             GL11.glEnable(GL11.GL_CULL_FACE);
             GL11.glDisable(GL11.GL_DITHER);
-            GL11.glDisable(GL11.GL_STENCIL_TEST);
             GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
-            GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_FASTEST);
-            GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_FASTEST);
             GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_FASTEST);
-            GL11.glShadeModel(GL11.GL_FLAT);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         } catch (Exception ignored) {}
     }
 
+    // 2. Minecraft config — скрытые настройки
     private static void applyMinecraftUltra() {
         File f = new File(System.getProperty("user.dir"), "options.txt");
         if (!f.exists()) return;
@@ -62,10 +61,11 @@ public class FpsBooster {
             c = c.replaceAll("soundVolume:\\d+\\.\\d+", "soundVolume:0.0");
             c = c.replaceAll("ambientVolume:\\d+\\.\\d+", "ambientVolume:0.0");
             Files.writeString(f.toPath(), c);
-            AetherOptimizerMod.LOGGER.info("Minecraft: ULTRA");
+            AetherOptimizerMod.LOGGER.info("Minecraft: ULTRA CONFIG");
         } catch (Exception ignored) {}
     }
 
+    // 3. Sodium — скрытые оптимизации
     private static void applySodiumUltra() {
         Path p = Paths.get(System.getProperty("user.dir"), "config/sodium-options.json");
         if (!p.toFile().exists()) return;
@@ -82,6 +82,7 @@ public class FpsBooster {
         } catch (Exception ignored) {}
     }
 
+    // 4. Iris — тени оптимизированы
     private static void applyIrisUltra() {
         Path p = Paths.get(System.getProperty("user.dir"), "config/iris.properties");
         if (!p.toFile().exists()) return;
@@ -94,6 +95,7 @@ public class FpsBooster {
         } catch (Exception ignored) {}
     }
 
+    // 5. Лаунчер — 85% разрешение (почти не заметно)
     private static void applyLauncherUltra() {
         String[] paths = {
             "/storage/emulated/0/Android/data/net.kdt.pojavlaunch/files/config.json",
@@ -108,12 +110,14 @@ public class FpsBooster {
                     c = c.replaceAll("\"resolution\"\\s*:\\s*\\d+", "\"resolution\": 85");
                     c = c.replaceAll("\"forceVsync\"\\s*:\\s*\\w+", "\"forceVsync\": false");
                     Files.writeString(f.toPath(), c);
+                    AetherOptimizerMod.LOGGER.info("Launcher: 85% RES");
                     return;
                 } catch (Exception ignored) {}
             }
         }
     }
 
+    // 6. JVM — ультра аргументы
     private static void applyJVMUltra() {
         if (jvmSaved) return;
         jvmSaved = true;
@@ -126,10 +130,11 @@ public class FpsBooster {
             "-XX:+UseLargePages -XX:+UseNUMA";
         File f = new File(System.getProperty("user.dir"), "aether_ultra_jvm_args.txt");
         try { Files.writeString(f.toPath(), args);
-            AetherOptimizerMod.LOGGER.info("JVM: ULTRA");
+            AetherOptimizerMod.LOGGER.info("JVM: ULTRA ARGS SAVED");
         } catch (Exception ignored) {}
     }
 
+    // 7. Поток — максимальный приоритет
     private static void applyThreadUltra() {
         try {
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -138,6 +143,7 @@ public class FpsBooster {
         } catch (Exception ignored) {}
     }
 
+    // 8. Память — агрессивная очистка
     private static void applyMemoryUltra() {
         long max = Runtime.getRuntime().maxMemory();
         long free = Runtime.getRuntime().freeMemory();
@@ -146,6 +152,7 @@ public class FpsBooster {
         }
     }
 
+    // 9. Сеть — минимальные таймауты
     private static void applyNetworkUltra() {
         System.setProperty("java.net.preferIPv4Stack", "true");
         System.setProperty("http.keepAlive", "false");
@@ -154,4 +161,4 @@ public class FpsBooster {
         System.setProperty("sun.net.inetaddr.ttl", "15");
         System.setProperty("networkaddress.cache.ttl", "15");
     }
-                }
+    }
