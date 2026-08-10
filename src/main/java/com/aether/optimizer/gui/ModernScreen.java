@@ -12,6 +12,7 @@ public class ModernScreen extends Screen {
     private boolean fastPlace = FastPlace.isEnabled();
     private boolean smartRAM = SmartRAM.isEnabled();
     private boolean netBoost = NetworkOptimizer.isEnabled();
+    private boolean fpsBoost = FpsBooster.isEnabled();
     private String status = "Ready";
     private String bestRenderer = "";
     private int gain = 0;
@@ -30,7 +31,9 @@ public class ModernScreen extends Screen {
 
     @Override
     protected void init() {
-        int cx = this.width / 2, y = 55;
+        int cx = this.width / 2, y = 45;
+
+        // Заголовок с гличем рисуется в render
 
         addDrawableChild(ButtonWidget.builder(Text.literal("⚡ OPTIMIZE"), btn -> {
             status = "Testing..."; clearChildren(); init();
@@ -39,7 +42,7 @@ public class ModernScreen extends Screen {
             status = "Best: " + bestRenderer + " | +" + gain + " FPS";
             clearChildren(); init();
         }).dimensions(cx - 60, y, 120, 20).build());
-        y += 30;
+        y += 28;
 
         addDrawableChild(ButtonWidget.builder(
             Text.literal((heatGuard ? "✅" : "❌") + " Heat Guard"), btn -> {
@@ -65,7 +68,15 @@ public class ModernScreen extends Screen {
                 if (netBoost) NetworkOptimizer.optimize();
                 clearChildren(); init();
             }).dimensions(cx - 60, y, 120, 20).build());
+        y += 22;
+        addDrawableChild(ButtonWidget.builder(
+            Text.literal((fpsBoost ? "✅" : "❌") + " ULTRA BOOST"), btn -> {
+                fpsBoost = !fpsBoost; FpsBooster.setEnabled(fpsBoost);
+                if (fpsBoost) FpsBooster.applyAll();
+                clearChildren(); init();
+            }).dimensions(cx - 60, y, 120, 20).build());
         y += 28;
+
         addDrawableChild(ButtonWidget.builder(Text.literal("🧹 Clear RAM"), btn -> {
             int f = SmartRAM.cleanNow(); status = "Freed " + f + " MB";
         }).dimensions(cx - 50, y, 100, 20).build());
@@ -82,14 +93,14 @@ public class ModernScreen extends Screen {
         for (int x = 0; x < width; x += 32) for (int y = 0; y < height; y += 32) ctx.fill(x, y, x + 1, y + 1, 0xFF1A1A2E);
         PulseEffects.tick();
         for (int i = 0; i < 40; i++) { py[i] -= ps[i]; if (py[i] < 0) { py[i] = height; px[i] = rand.nextFloat() * width; } ctx.fill((int) px[i], (int) py[i], (int) px[i] + 2, (int) py[i] + 2, 0xFF00FF88); }
-        PulseEffects.renderGlitchText(ctx, textRenderer, "AETHER OPTIMIZER", width / 2, 18, 0xFF00FF88);
-        ctx.drawCenteredTextWithShadow(textRenderer, status, width / 2, 38, 0xFFAAAAAA);
+        PulseEffects.renderGlitchText(ctx, textRenderer, "AETHER OPTIMIZER", width / 2, 16, 0xFF00FF88);
+        ctx.drawCenteredTextWithShadow(textRenderer, status, width / 2, 34, 0xFFAAAAAA);
         int bw = 160, bh = 4, bx = width / 2 - bw / 2, by = height - 45;
         ctx.fill(bx, by, bx + bw, by + bh, 0xFF1A1A2E);
-        int fill = gain > 0 ? bw * gain / 40 : 0;
+        int fill = gain > 0 ? bw * Math.min(gain, 100) / 100 : 0;
         ctx.fill(bx, by, bx + fill, by + bh, 0xFF00FF88);
         String info = bestRenderer.isEmpty() ? "Temp: " + temp : "Best: " + bestRenderer + " | +" + gain + " FPS | " + temp;
         ctx.drawCenteredTextWithShadow(textRenderer, info, width / 2, height - 55, 0xFF888888);
         super.render(ctx, mx, my, delta);
     }
-              }
+    }
